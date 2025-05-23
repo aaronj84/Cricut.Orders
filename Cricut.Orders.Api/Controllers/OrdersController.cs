@@ -47,7 +47,12 @@ namespace Cricut.Orders.Api.Controllers
         public async Task<ActionResult<OrderViewModel>> GetOrdersByCustomerID(int custId)
         {
             var orders = await _orderDomain.GetOrdersByCustomerId(custId);
-            return null;
+
+            if (orders == null)
+                return NotFound();
+
+            //GenAI Note: i got stuck here when i had orders.ToViewModel() giving me an error about missing a ToViewModel implementation. ChatGPT gave me this:
+            return Ok(orders.Select(o => o.ToViewModel()));
         }
     }
 }
