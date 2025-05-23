@@ -13,7 +13,9 @@
             get
             {
                 var orderItemTotal = OrderItems.Sum(x => x.Total);
-                if (orderItemTotal > DiscountThreshold)
+
+                // Bug Fix: orderItemTotal was failing if ==25.0, needed >=... no genAI used for this genius correction on my part
+                if (orderItemTotal >= DiscountThreshold)
                 {
                     orderItemTotal = Apply10PercentDiscount(orderItemTotal);
                 }
