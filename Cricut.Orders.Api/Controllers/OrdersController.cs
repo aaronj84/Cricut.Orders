@@ -23,5 +23,37 @@ namespace Cricut.Orders.Api.Controllers
             var savedOrder = await _orderDomain.CreateNewOrderAsync(newOrder);
             return Ok(savedOrder.ToViewModel());
         }
+
+        // Aaron GenAI Note: i used chatGPT to remember whether i needed a separate class, or if i could just add the new 
+        // endpoint to this class. With chatGPT i confirmed i can add it here as an HttpGet method. 
+        //
+        // Here's the code i got from chatGPT, and then stopped using genAI for this stage. I also disabled CoPilot code completion
+        //
+        /** 
+            [HttpGet("{id}")]
+            public async Task<ActionResult<OrderViewModel>> GetOrderByIdAsync(Guid id)
+            {
+            var order = await _orderDomain.GetOrderByIdAsync(id);
+            if (order == null)
+            return NotFound();
+
+            return Ok(order.ToViewModel());
+            }
+
+            }
+            }
+        **/
+        [HttpGet("{custId}")]
+        public async Task<ActionResult<OrderViewModel>> GetOrdersByCustomerID(int custId)
+        {
+            var orders = await _orderDomain.GetOrdersByCustomerId(custId);
+
+            if (orders == null)
+                return NotFound();
+
+            //GenAI Note: i got stuck here when i had orders.ToViewModel() giving me an error about missing a ToViewModel implementation. ChatGPT gave me this:
+            return Ok(orders.Select(o => o.ToViewModel()));
+        }
     }
 }
+        
